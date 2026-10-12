@@ -63,7 +63,7 @@ const CONFIG = {
     { id: "cafe",      name: "Кафе",           emoji: "☕", description: "Ароматный кофе и долгие разговоры",         svg: "cafe" },
     { id: "walk",      name: "Прогулка",       emoji: "🌃", description: "Вечерний город, огни и хорошая компания",   svg: "walk" },
     { id: "restaurant",name: "Ресторан",       emoji: "🍽️", description: "Свечи, вкусная еда и приятная музыка",      svg: "restaurant" },
-    { id: "sea",       name: "Море",           emoji: "🌊", description: "Шум волн, закат и солёный ветер",           svg: "sea" },
+    { id: "sea",       name: "Аквапарк",           emoji: "🌊", description: "Шум волн, закат и солёный ветер",           svg: "sea" },
     { id: "ferris",    name: "Колесо обозрения", emoji: "🎡", description: "Весь город сверху и ты рядом",             svg: "ferris" },
     { id: "museum",    name: "Музей",          emoji: "🖼️", description: "Искусство, тишина и вдохновение",           svg: "museum" },
     { id: "zoo",       name: "Зоопарк",        emoji: "🦁", description: "Милые звери и детская радость",             svg: "zoo" },
@@ -94,8 +94,8 @@ const CONFIG = {
   finalFlirt: "Не забудь захватить улыбку 😉",
   signature: "С любовью, {yourName}",
 
-  // Кнопка "Написать мне" — ведёт в твой Telegram
-  telegramUsername: "N1ck_806",   // ← без @
+  // Кнопка "Написать мне" — ведёт в Telegram
+  telegramUsername: "N1ck_806",   
   contactButton: "💬 Мой телеграмм",
   contactSubtext: "Если что-то захочешь уточнить или поменять — пиши 💌",
 
