@@ -55,8 +55,8 @@ def log(msg, color=C.RESET):
 def banner():
     log("")
     log("  ╔══════════════════════════════════════════════════╗", C.PINK + C.BOLD)
-    log("  ║   💕  DATE INVITATION  💕                        ║", C.PINK + C.BOLD)
-    log("  ║   Render + Aiven PostgreSQL + Admin              ║", C.PINK + C.BOLD)
+    log("  ║   💕  Дата свидания  💕                                   ║", C.PINK + C.BOLD)
+    log("  ║   Render + Aiven PostgreSQL + Admin                       ║", C.PINK + C.BOLD)
     log("  ╚══════════════════════════════════════════════════╝", C.PINK + C.BOLD)
     log("")
 
@@ -104,7 +104,7 @@ def get_db_connection():
         conn = psycopg2.connect(DATABASE_URL, connect_timeout=10)
         return conn
     except Exception as e:
-        log(f"❌ Ошибка подключения к БД: {e}", C.RED)
+        log(f"❌ Ошибка подключения к Базе данных: {e}", C.RED)
         return None
 
 
@@ -214,7 +214,7 @@ def save_meet(data):
 
     conn = get_db_connection()
     if not conn:
-        log("⚠ БД недоступна — ответ НЕ сохранён", C.YELLOW)
+        log("⚠ База данных недоступна — ответ НЕ сохранён", C.YELLOW)
         return record, False
 
     try:
@@ -456,8 +456,8 @@ def render_answers_page(answers, stats):
                     </div>
                     <div class="row"><span class="label">📅 День:</span> <b>{a['day']}</b></div>
                     <div class="row"><span class="label">🕐 Время:</span> <b>{a['time']}</b></div>
-                    <div class="row"><span class="label">💝 Она:</span> {a['her_name']}</div>
-                    <div class="row"><span class="label">💌 Он:</span> {a['his_name']}</div>
+                    <div class="row"><span class="label">💝 Избранная:</span> {a['her_name']}</div>
+                    <div class="row"><span class="label">💌 Я:</span> {a['his_name']}</div>
                     <div class="meta">#{a['id']} · {a['received_at']}</div>
                 </div>
             """)
@@ -812,8 +812,8 @@ def print_meet(record, saved):
     log(f"  {record['place_emoji']}  Место:  {record['place']}", C.BOLD)
     log(f"  📅  День:   {record['day']}", C.BOLD)
     log(f"  🕐  Время:  {record['time']}", C.BOLD)
-    log(f"  💝  Она:    {record['her_name']}")
-    log(f"  💌  Он:     {record['his_name']}")
+    log(f"  💝  Избранница:    {record['her_name']}")
+    log(f"  💌  Я:     {record['his_name']}")
     if saved:
         log(f"  ✅ Сохранено  •  id={record.get('id')}  •  {record['received_at']}", C.GREEN)
     else:
