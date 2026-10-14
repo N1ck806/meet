@@ -51,8 +51,8 @@ def banner():
     print()
     print(f"{C.PINK}{C.BOLD}")
     print("  ╔══════════════════════════════════════════════════╗")
-    print("  ║   💕  DATE INVITATION  💕                        ║")
-    print("  ║   Локальный запуск + Cloudflare Tunnel           ║")
+    print("  ║   💕  Дата свидания.  💕                                  ║")
+    print("  ║   Локальный запуск + Cloudflare Tunnel.                   ║")
     print("  ╚══════════════════════════════════════════════════╝")
     print(f"{C.RESET}")
 
@@ -76,7 +76,7 @@ def find_free_port(start=8000, attempts=20):
                 return port
             except OSError:
                 continue
-    raise RuntimeError("Не удалось найти свободный порт")
+    raise RuntimeError("Ошибка. Не удалось найти свободный порт")
 
 
 def get_local_ip():
