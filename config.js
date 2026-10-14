@@ -82,10 +82,10 @@ const CONFIG = {
   defaultMinute: 0,
   // Пресеты — быстрые кнопки
   timePresets: [
-    { label: "🌅 Утро",   hour: 10, minute: 0 },
-    { label: "☀️ День",   hour: 14, minute: 0 },
-    { label: "🌇 Вечер",  hour: 18, minute: 0 },
-    { label: "🌙 Ночь",   hour: 21, minute: 0 },
+    { label: "🌅 Утро",   hour: 8, minute: 0 },
+    { label: "☀️ День",   hour: 12, minute: 0 },
+    { label: "🌇 Вечер",  hour: 20, minute: 0 },
+    { label: "🌙 Ночь",   hour: 23, minute: 0 },
   ],
 
   // ===== ФИНАЛЬНЫЙ ЭКРАН =====
