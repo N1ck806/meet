@@ -67,7 +67,7 @@ function initParticles() {
 // ============================================
 function initBackground() {
   const container = document.getElementById('floatingHearts');
-  const symbols = ['💕','💖','💗','🌸','✨','💝','🌷'];
+  const symbols = ['💕','💖','💗','🌸','✨','💝','🌷','🌺','🌷','💖','🩷'];
   for (let i = 0; i < 22; i++) {
     const el = document.createElement('div');
     el.className = 'fh';
@@ -119,7 +119,7 @@ function initSoundToggle() {
   btn.addEventListener('click', () => {
     STATE.soundOn = !STATE.soundOn;
     btn.classList.toggle('muted', !STATE.soundOn);
-    if (STATE.soundOn) playTone(660, 0.08);
+    if (STATE.soundOn) playTone(660, 0.1);
   });
 }
 
@@ -793,7 +793,7 @@ function showFinal() {
   // Конфетти
   const conf = document.getElementById('confetti');
   conf.innerHTML = '';
-  const colors = ['#ff6b9d','#c9184a','#b388ff','#ffb3d9','#ffeb3b','#ff4081'];
+  const colors = ['#ff6b9d','#c9184a','#b388ff','#ffb3d9','#ffeb3b','#ff4081','#f0eff4'];
   for (let i = 0; i < 80; i++) {
     const s = document.createElement('span');
     s.style.left = Math.random() * 100 + '%';
