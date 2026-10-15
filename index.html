@@ -4,106 +4,349 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <meta name="theme-color" content="#ff6b9d">
+<meta name="description" content="Приглашение на свидание 💕">
 <title>Приглашение 💕</title>
+
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Poppins:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,600;0,700;1,600&family=Caveat:wght@500;700&display=swap" rel="stylesheet">
+
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>💕</text></svg>">
+
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-<div class="particles" id="particles"></div>
-<div class="bg-decor"></div>
-<div class="floating-hearts" id="floatingHearts"></div>
+<!-- ============================================================
+     ФОНОВЫЕ СЛОИ
+     ============================================================ -->
+<div class="aurora-bg" aria-hidden="true">
+  <div class="aurora-blob aurora-1"></div>
+  <div class="aurora-blob aurora-2"></div>
+  <div class="aurora-blob aurora-3"></div>
+  <div class="aurora-blob aurora-4"></div>
+</div>
 
-<!-- Progress bar -->
-<div class="progress-bar" id="progressBar">
-  <div class="progress-fill" id="progressFill"></div>
+<div class="bg-decor" aria-hidden="true"></div>
+<div class="bg-grid" aria-hidden="true"></div>
+
+<div class="particles" id="particles" aria-hidden="true"></div>
+<canvas id="heartsCanvas" class="hearts-canvas" aria-hidden="true"></canvas>
+<div class="floating-hearts" id="floatingHearts" aria-hidden="true"></div>
+<div class="sparkles" id="sparkles" aria-hidden="true"></div>
+<div class="bokeh" id="bokeh" aria-hidden="true"></div>
+
+<!-- SVG фильтры -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <filter id="goo">
+      <feGaussianBlur in="SourceGraphic" stdDeviation="8" result="blur"/>
+      <feColorMatrix in="blur" mode="matrix"
+        values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 20 -9" result="goo"/>
+      <feBlend in="SourceGraphic" in2="goo"/>
+    </filter>
+    <filter id="softGlow">
+      <feGaussianBlur stdDeviation="3" result="coloredBlur"/>
+      <feMerge>
+        <feMergeNode in="coloredBlur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+</svg>
+
+<!-- ============================================================
+     ПРОГРЕСС-БАР
+     ============================================================ -->
+<div class="progress-bar" id="progressBar" role="progressbar" aria-label="Прогресс">
+  <div class="progress-track">
+    <div class="progress-fill" id="progressFill"></div>
+  </div>
   <div class="progress-dots" id="progressDots"></div>
 </div>
 
-<!-- Sound toggle -->
-<button class="sound-toggle" id="soundToggle" aria-label="Звук">
-  <span class="sound-on">🔊</span>
-  <span class="sound-off">🔇</span>
-</button>
+<!-- ============================================================
+     ВЕРХНЯЯ ПАНЕЛЬ
+     ============================================================ -->
+<div class="top-bar">
+  <button class="icon-btn sound-toggle" id="soundToggle" aria-label="Звук">
+    <svg class="ico-sound-on" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" fill="currentColor"/>
+      <path d="M15.54 8.46a5 5 0 0 1 0 7.07"/>
+      <path d="M19.07 4.93a10 10 0 0 1 0 14.14"/>
+    </svg>
+    <svg class="ico-sound-off" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" fill="currentColor"/>
+      <line x1="23" y1="9" x2="17" y2="15"/>
+      <line x1="17" y1="9" x2="23" y2="15"/>
+    </svg>
+  </button>
+</div>
 
+<!-- ============================================================
+     КОТИК-КОМПАНЬОН
+     ============================================================ -->
+<div class="cat-companion" id="catCompanion" aria-hidden="true">
+  <div class="cat-bubble" id="catBubble"></div>
+  <div class="cat-svg-wrap">
+    <svg class="cat-svg" viewBox="0 0 200 220" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="catFurG" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#ffffff"/>
+          <stop offset="100%" stop-color="#fdf3f7"/>
+        </linearGradient>
+        <radialGradient id="catCheekG" cx="50%" cy="50%">
+          <stop offset="0%" stop-color="#ffb3c6" stop-opacity="0.9"/>
+          <stop offset="100%" stop-color="#ffb3c6" stop-opacity="0"/>
+        </radialGradient>
+        <linearGradient id="catEarG" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#ffe0e9"/>
+          <stop offset="100%" stop-color="#ffc2d1"/>
+        </linearGradient>
+      </defs>
+
+      <!-- Тень -->
+      <ellipse cx="100" cy="210" rx="60" ry="6" fill="#ffb3c6" opacity="0.35"/>
+
+      <!-- Тело -->
+      <path class="cat-body" d="M55,205 Q50,150 70,130 Q85,118 100,118 Q115,118 130,130 Q150,150 145,205 Z"
+            fill="url(#catFurG)" stroke="#c98fa5" stroke-width="2.2" stroke-linejoin="round"/>
+
+      <!-- Ушки -->
+      <path class="cat-ear cat-ear-l" d="M62,80 Q55,55 68,58 Q78,62 82,78 Z"
+            fill="url(#catEarG)" stroke="#c98fa5" stroke-width="2.2" stroke-linejoin="round"/>
+      <path class="cat-ear cat-ear-r" d="M138,80 Q145,55 132,58 Q122,62 118,78 Z"
+            fill="url(#catEarG)" stroke="#c98fa5" stroke-width="2.2" stroke-linejoin="round"/>
+
+      <!-- Голова -->
+      <ellipse class="cat-head" cx="100" cy="105" rx="52" ry="48"
+               fill="url(#catFurG)" stroke="#c98fa5" stroke-width="2.2"/>
+
+      <!-- Щёчки -->
+      <ellipse class="cat-cheek cat-cheek-l" cx="72" cy="115" rx="10" ry="7" fill="url(#catCheekG)"/>
+      <ellipse class="cat-cheek cat-cheek-r" cx="128" cy="115" rx="10" ry="7" fill="url(#catCheekG)"/>
+
+      <!-- Глазки (счастливые, закрытые) -->
+      <path class="cat-eye cat-eye-l" d="M68,98 Q76,88 84,98"
+            fill="none" stroke="#4a2c38" stroke-width="4.5" stroke-linecap="round"/>
+      <path class="cat-eye cat-eye-r" d="M116,98 Q124,88 132,98"
+            fill="none" stroke="#4a2c38" stroke-width="4.5" stroke-linecap="round"/>
+
+      <!-- Носик -->
+      <path class="cat-nose" d="M96,112 Q100,108 104,112 Q102,116 100,116 Q98,116 96,112 Z"
+            fill="#ff6b9d"/>
+
+      <!-- Ротик -->
+      <path class="cat-mouth" d="M100,116 Q94,122 88,118 M100,116 Q106,122 112,118"
+            fill="none" stroke="#4a2c38" stroke-width="2" stroke-linecap="round"/>
+
+      <!-- Усики -->
+      <g stroke="#c98fa5" stroke-width="1.4" stroke-linecap="round" opacity="0.7">
+        <line x1="52" y1="108" x2="34" y2="104"/>
+        <line x1="52" y1="114" x2="34" y2="116"/>
+        <line x1="148" y1="108" x2="166" y2="104"/>
+        <line x1="148" y1="114" x2="166" y2="116"/>
+      </g>
+
+      <!-- Лапки -->
+      <ellipse class="cat-paw cat-paw-l" cx="72" cy="195" rx="16" ry="12"
+               fill="url(#catFurG)" stroke="#c98fa5" stroke-width="2.2"/>
+      <ellipse class="cat-paw cat-paw-r" cx="128" cy="195" rx="16" ry="12"
+               fill="url(#catFurG)" stroke="#c98fa5" stroke-width="2.2"/>
+
+      <!-- Сердечко в лапках -->
+      <g class="cat-heart-group">
+        <path class="cat-heart" d="M100,158 C88,148 82,140 82,132 C82,124 88,120 94,120 C97,120 99,122 100,125 C101,122 103,120 106,120 C112,120 118,124 118,132 C118,140 112,148 100,158 Z"
+              fill="#ff4d6d" opacity="0.9"/>
+      </g>
+
+      <!-- Блёстки -->
+      <circle class="cat-sparkle cs-1" cx="40" cy="60" r="2.5" fill="#ffd93d"/>
+      <circle class="cat-sparkle cs-2" cx="160" cy="70" r="2" fill="#ff8fb1"/>
+      <circle class="cat-sparkle cs-3" cx="30" cy="140" r="1.8" fill="#b388ff"/>
+      <circle class="cat-sparkle cs-4" cx="170" cy="150" r="2" fill="#ffd93d"/>
+    </svg>
+  </div>
+</div>
+
+<!-- ============================================================
+     КОНТЕЙНЕР ШАГОВ
+     ============================================================ -->
 <main class="container">
 
-  <!-- ШАГ 0: Приглашение -->
-  <section class="step active" data-step="0">
-    <div class="card">
+  <!-- ============================================================
+       ШАГ 0: ПРИГЛАШЕНИЕ
+       ============================================================ -->
+  <section class="step active" data-step="0" aria-label="Приглашение">
+    <div class="card card-invite">
+      <div class="card-shine"></div>
+      <div class="card-corner corner-tl"></div>
+      <div class="card-corner corner-tr"></div>
+      <div class="card-corner corner-bl"></div>
+      <div class="card-corner corner-br"></div>
+
+      <!-- Плавающие стикеры -->
+      <div class="sticker sticker-1" aria-hidden="true">
+        <svg viewBox="0 0 60 60"><path d="M30,52 C12,38 4,26 4,18 C4,10 12,6 20,6 C25,6 29,9 30,13 C31,9 35,6 40,6 C48,6 56,10 56,18 C56,26 48,38 30,52 Z" fill="#ff8fb1" opacity="0.85"/></svg>
+      </div>
+      <div class="sticker sticker-2" aria-hidden="true">
+        <svg viewBox="0 0 60 60"><circle cx="30" cy="30" r="22" fill="none" stroke="#ffd93d" stroke-width="3" stroke-dasharray="4 4"/><circle cx="30" cy="30" r="6" fill="#ffd93d"/></svg>
+      </div>
+      <div class="sticker sticker-3" aria-hidden="true">
+        <svg viewBox="0 0 60 60"><path d="M30,5 L36,22 L54,22 L40,33 L46,50 L30,40 L14,50 L20,33 L6,22 L24,22 Z" fill="#b388ff" opacity="0.85"/></svg>
+      </div>
+      <div class="sticker sticker-4" aria-hidden="true">
+        <svg viewBox="0 0 60 60"><circle cx="30" cy="30" r="20" fill="#ff8fb1" opacity="0.5"/><circle cx="30" cy="30" r="12" fill="#fff" opacity="0.7"/></svg>
+      </div>
+
+      <!-- Большое сердце -->
       <div class="svg-heart-wrap">
-        <svg class="svg-heart" viewBox="0 0 100 100">
+        <div class="heart-rays" aria-hidden="true">
+          <span></span><span></span><span></span><span></span>
+          <span></span><span></span><span></span><span></span>
+        </div>
+        <svg class="svg-heart" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
           <defs>
             <linearGradient id="heartGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-              <stop offset="0%" stop-color="#ff6b9d"/>
-              <stop offset="50%" stop-color="#ff4d6d"/>
+              <stop offset="0%" stop-color="#ffb3d9"/>
+              <stop offset="45%" stop-color="#ff6b9d"/>
               <stop offset="100%" stop-color="#c9184a"/>
             </linearGradient>
+            <radialGradient id="heartShine" cx="35%" cy="28%">
+              <stop offset="0%" stop-color="#fff" stop-opacity="0.95"/>
+              <stop offset="55%" stop-color="#fff" stop-opacity="0"/>
+            </radialGradient>
+            <filter id="heartShadow" x="-30%" y="-30%" width="160%" height="160%">
+              <feGaussianBlur in="SourceAlpha" stdDeviation="3"/>
+              <feOffset dx="0" dy="4" result="off"/>
+              <feComponentTransfer><feFuncA type="linear" slope="0.4"/></feComponentTransfer>
+              <feMerge><feMergeNode/><feMergeNode in="SourceGraphic"/></feMerge>
+            </filter>
           </defs>
-          <path d="M50,88 C20,65 5,45 5,30 C5,15 18,5 32,5 C41,5 48,10 50,18 C52,10 59,5 68,5 C82,5 95,15 95,30 C95,45 80,65 50,88 Z" fill="url(#heartGrad)"/>
+
+          <path class="heart-path"
+                d="M50,88 C20,65 5,45 5,30 C5,15 18,5 32,5 C41,5 48,10 50,18 C52,10 59,5 68,5 C82,5 95,15 95,30 C95,45 80,65 50,88 Z"
+                fill="url(#heartGrad)" filter="url(#heartShadow)"/>
+          <path d="M50,88 C20,65 5,45 5,30 C5,15 18,5 32,5 C41,5 48,10 50,18 C52,10 59,5 68,5 C82,5 95,15 95,30 C95,45 80,65 50,88 Z"
+                fill="url(#heartShine)"/>
+
+          <!-- Блёстки на сердце -->
+          <circle cx="30" cy="25" r="1.5" fill="#fff" opacity="0.9">
+            <animate attributeName="opacity" values="0.3;1;0.3" dur="1.8s" repeatCount="indefinite"/>
+          </circle>
+          <circle cx="70" cy="20" r="1.2" fill="#fff" opacity="0.8">
+            <animate attributeName="opacity" values="0.3;1;0.3" dur="2.4s" repeatCount="indefinite"/>
+          </circle>
+          <circle cx="50" cy="55" r="1" fill="#fff" opacity="0.7">
+            <animate attributeName="opacity" values="0.3;1;0.3" dur="2s" repeatCount="indefinite"/>
+          </circle>
         </svg>
+        <div class="heart-pulse-ring"></div>
+        <div class="heart-pulse-ring ring-2"></div>
       </div>
+
       <h1 class="greeting" id="greeting"></h1>
       <p class="subtitle" id="subtitle"></p>
       <h2 class="question" id="question"></h2>
+
       <div class="buttons">
-        <button class="btn btn-yes" id="btnYes"></button>
+        <button class="btn btn-yes" id="btnYes">
+          <span class="btn-emoji">💖</span>
+          <span class="btn-text" id="btnYesText">Да</span>
+          <span class="btn-glow"></span>
+          <span class="btn-ripple"></span>
+        </button>
         <button class="btn btn-no" id="btnNo">
-          <span class="no-text">Нет</span>
+          <span class="no-text" id="btnNoText">Нет</span>
           <span class="no-heart">💖</span>
+        </button>
+      </div>
+
+      <div class="hint-text">
+        <span class="hint-icon">✨</span>
+        нажми «Да» и начнём планировать
+        <span class="hint-icon">✨</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       ШАГ 1: МЕСТО
+       ============================================================ -->
+  <section class="step" data-step="1" aria-label="Выбор места">
+    <div class="card">
+      <div class="card-shine"></div>
+      <div class="step-badge">
+        <span class="step-badge-num">1</span>
+        <span class="step-badge-text">место</span>
+      </div>
+      <h2 class="step-title" id="step2Title"></h2>
+      <p class="step-subtitle" id="step2Subtitle"></p>
+      <div class="places-grid" id="placesGrid"></div>
+      <div class="step-nav">
+        <button class="btn btn-back" data-back="0">
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+          Назад
         </button>
       </div>
     </div>
   </section>
 
-  <!-- ШАГ 1: Место -->
-  <section class="step" data-step="1">
+  <!-- ============================================================
+       ШАГ 2: ДЕНЬ
+       ============================================================ -->
+  <section class="step" data-step="2" aria-label="Выбор дня">
     <div class="card">
-      <h2 class="step-title" id="step2Title"></h2>
-      <p class="step-subtitle" id="step2Subtitle"></p>
-      <div class="places-grid" id="placesGrid"></div>
-      <div class="step-nav">
-        <button class="btn btn-back" data-back="0">← Назад</button>
+      <div class="card-shine"></div>
+      <div class="step-badge">
+        <span class="step-badge-num">2</span>
+        <span class="step-badge-text">день</span>
       </div>
-    </div>
-  </section>
-
-  <!-- ШАГ 2: День -->
-  <section class="step" data-step="2">
-    <div class="card">
       <h2 class="step-title" id="step3Title"></h2>
       <p class="step-subtitle" id="step3Subtitle"></p>
       <div class="days-grid" id="daysGrid"></div>
       <div class="step-nav">
-        <button class="btn btn-back" data-back="1">← Назад</button>
+        <button class="btn btn-back" data-back="1">
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+          Назад
+        </button>
       </div>
     </div>
   </section>
 
-  <!-- ШАГ 3: Время (без часов — только кнопки) -->
-  <section class="step" data-step="3">
+  <!-- ============================================================
+       ШАГ 3: ВРЕМЯ
+       ============================================================ -->
+  <section class="step" data-step="3" aria-label="Выбор времени">
     <div class="card">
+      <div class="card-shine"></div>
+      <div class="step-badge">
+        <span class="step-badge-num">3</span>
+        <span class="step-badge-text">время</span>
+      </div>
       <h2 class="step-title" id="step4Title"></h2>
       <p class="step-subtitle" id="step4Subtitle"></p>
 
       <div class="time-section">
         <!-- Большое отображение времени -->
         <div class="time-big">
+          <div class="time-big-glow"></div>
           <div class="time-big-value" id="timeBigValue">18:00</div>
-          <div class="time-big-label">начало свидания</div>
+          <div class="time-big-label">
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><polyline points="12 7 12 12 15 14"/></svg>
+            начало свидания
+          </div>
         </div>
 
-        <!-- Кнопки управления -->
+        <!-- Управление часами и минутами -->
         <div class="time-controls">
           <div class="time-group">
             <button class="tc-btn" data-unit="hour" data-dir="up" aria-label="Час +1">
-              <svg viewBox="0 0 24 24" width="22" height="22"><path d="M12 6l-6 8h12z" fill="currentColor"/></svg>
+              <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="18 15 12 9 6 15"/></svg>
             </button>
             <div class="tc-value" id="tcHour">18</div>
             <button class="tc-btn" data-unit="hour" data-dir="down" aria-label="Час −1">
-              <svg viewBox="0 0 24 24" width="22" height="22"><path d="M12 18l6-8H6z" fill="currentColor"/></svg>
+              <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
             </button>
             <div class="tc-label">часы</div>
           </div>
@@ -112,54 +355,73 @@
 
           <div class="time-group">
             <button class="tc-btn" data-unit="minute" data-dir="up" aria-label="Минуты +5">
-              <svg viewBox="0 0 24 24" width="22" height="22"><path d="M12 6l-6 8h12z" fill="currentColor"/></svg>
+              <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="18 15 12 9 6 15"/></svg>
             </button>
             <div class="tc-value" id="tcMinute">00</div>
             <button class="tc-btn" data-unit="minute" data-dir="down" aria-label="Минуты −5">
-              <svg viewBox="0 0 24 24" width="22" height="22"><path d="M12 18l6-8H6z" fill="currentColor"/></svg>
+              <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
             </button>
             <div class="tc-label">минуты</div>
           </div>
         </div>
 
-        <!-- Быстрые пресеты -->
         <div class="time-presets" id="timePresets"></div>
       </div>
 
       <div class="step-nav">
-        <button class="btn btn-back" data-back="2">← Назад</button>
-        <button class="btn btn-next" id="btnTimeConfirm">Подтвердить ✨</button>
+        <button class="btn btn-back" data-back="2">
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+          Назад
+        </button>
+        <button class="btn btn-next" id="btnTimeConfirm">
+          Подтвердить
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+        </button>
       </div>
     </div>
   </section>
 
-  <!-- ШАГ 4: ФИНАЛ -->
-  <section class="step" data-step="4">
+  <!-- ============================================================
+       ШАГ 4: ФИНАЛ
+       ============================================================ -->
+  <section class="step" data-step="4" aria-label="Финальный экран">
     <div class="card final-card">
-      <div class="confetti" id="confetti"></div>
+      <div class="confetti" id="confetti" aria-hidden="true"></div>
+      <div class="card-shine"></div>
 
+      <!-- Финальное сердце -->
       <div class="svg-final">
-        <svg viewBox="0 0 200 200" class="final-heart">
+        <svg viewBox="0 0 200 200" class="final-heart" xmlns="http://www.w3.org/2000/svg">
           <defs>
             <linearGradient id="finalGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-              <stop offset="0%" stop-color="#ff6b9d"/>
+              <stop offset="0%" stop-color="#ffb3d9"/>
               <stop offset="50%" stop-color="#ff4d6d"/>
               <stop offset="100%" stop-color="#c9184a"/>
             </linearGradient>
+            <radialGradient id="finalShine" cx="30%" cy="25%">
+              <stop offset="0%" stop-color="#fff" stop-opacity="0.9"/>
+              <stop offset="60%" stop-color="#fff" stop-opacity="0"/>
+            </radialGradient>
           </defs>
-          <path d="M100,170 C40,125 10,90 10,60 C10,30 35,10 65,10 C82,10 95,20 100,35 C105,20 118,10 135,10 C165,10 190,30 190,60 C190,90 160,125 100,170 Z" fill="url(#finalGrad)"/>
-          <!-- Маленькие блёстки вокруг -->
-          <circle cx="20" cy="30" r="3" fill="#ffb3d9" opacity="0.8">
-            <animate attributeName="opacity" values="0.3;1;0.3" dur="2s" repeatCount="indefinite"/>
+
+          <!-- Орбитальные частицы -->
+          <g class="orbit">
+            <circle cx="100" cy="20" r="3" fill="#ffb3d9"/>
+            <circle cx="180" cy="100" r="3" fill="#b388ff"/>
+            <circle cx="100" cy="180" r="3" fill="#ffd93d"/>
+            <circle cx="20" cy="100" r="3" fill="#ff8fb1"/>
+          </g>
+
+          <path d="M100,170 C40,125 10,90 10,60 C10,30 35,10 65,10 C82,10 95,20 100,35 C105,20 118,10 135,10 C165,10 190,30 190,60 C190,90 160,125 100,170 Z"
+                fill="url(#finalGrad)"/>
+          <path d="M100,170 C40,125 10,90 10,60 C10,30 35,10 65,10 C82,10 95,20 100,35 C105,20 118,10 135,10 C165,10 190,30 190,60 C190,90 160,125 100,170 Z"
+                fill="url(#finalShine)"/>
+
+          <circle cx="50" cy="50" r="2" fill="#fff" opacity="0.9">
+            <animate attributeName="opacity" values="0.3;1;0.3" dur="1.8s" repeatCount="indefinite"/>
           </circle>
-          <circle cx="180" cy="40" r="3" fill="#ffb3d9" opacity="0.8">
-            <animate attributeName="opacity" values="0.3;1;0.3" dur="2.3s" repeatCount="indefinite"/>
-          </circle>
-          <circle cx="30" cy="150" r="2.5" fill="#b388ff" opacity="0.8">
-            <animate attributeName="opacity" values="0.3;1;0.3" dur="1.7s" repeatCount="indefinite"/>
-          </circle>
-          <circle cx="170" cy="160" r="2.5" fill="#b388ff" opacity="0.8">
-            <animate attributeName="opacity" values="0.3;1;0.3" dur="2.1s" repeatCount="indefinite"/>
+          <circle cx="150" cy="60" r="2.2" fill="#fff" opacity="0.9">
+            <animate attributeName="opacity" values="0.3;1;0.3" dur="2.2s" repeatCount="indefinite"/>
           </circle>
         </svg>
       </div>
@@ -175,18 +437,32 @@
 
       <div class="final-actions">
         <a class="btn btn-contact" id="btnContact" target="_blank" rel="noopener">
-          <svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor" style="vertical-align:middle;margin-right:8px;">
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
             <path d="M9.78 18.65l.28-4.23 7.68-6.92c.34-.31-.07-.46-.52-.19L7.74 13.3 3.64 12c-.88-.25-.89-.86.2-1.3l15.97-6.16c.73-.33 1.43.18 1.15 1.3l-2.72 12.81c-.19.91-.74 1.13-1.5.71L12.6 16.3l-1.99 1.93c-.23.23-.42.42-.83.42z"/>
           </svg>
-          <span id="btnContactLabel"></span>
+          <span id="btnContactLabel">Написать мне</span>
         </a>
         <p class="contact-subtext" id="contactSubtext"></p>
       </div>
+
     </div>
   </section>
 
 </main>
 
+<!-- ============================================================
+     ПОДВАЛ
+     ============================================================ -->
+<footer class="site-footer">
+  <div class="footer-hearts" aria-hidden="true">
+    <span>💕</span><span>💖</span><span>💗</span>
+  </div>
+  <p class="footer-text">сделано с любовью</p>
+</footer>
+
+<!-- ============================================================
+     СКРИПТЫ
+     ============================================================ -->
 <script src="config.js"></script>
 <script src="script.js"></script>
 </body>
